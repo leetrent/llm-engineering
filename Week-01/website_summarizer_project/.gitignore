@@ -1,0 +1,19 @@
+# Ignore __pycache__ and compiled Python files
+__pycache__/
+*.py[cod]
+
+# Ignore .env files with sensitive data like API keys
+.env
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore log and output files
+*.log
+*.txt
+
+# VSCode settings (optional)
+.vscode/
+
+output/

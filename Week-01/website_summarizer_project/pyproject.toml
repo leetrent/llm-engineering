@@ -1,0 +1,20 @@
+[project]
+name = "websummary"
+version = "0.1.0"
+description = "A command-line tool that scrapes and summarizes webpage content using GPT-4o."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [
+  { name = "Lee Trent" }
+]
+dependencies = [
+  "beautifulsoup4",
+  "openai",
+  "python-dotenv",
+  "requests"
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
