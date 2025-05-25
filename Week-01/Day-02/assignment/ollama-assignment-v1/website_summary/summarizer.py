@@ -11,9 +11,10 @@ def init_openai():
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         raise RuntimeError("❌ No API key found in .env.")
-    client = OpenAI(api_key=api_key)
+    #client = OpenAI(api_key=api_key)
+    client = OpenAI(base_url='http://localhost:11434/v1', api_key='ollama')
 
-def summarize_text(text, max_chars=2000, model="gpt-4o"):
+def summarize_text(text, max_chars=2000, model="llama3.2"):
     if client is None:
         init_openai()
     

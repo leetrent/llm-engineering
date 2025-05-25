@@ -11,7 +11,7 @@ if __name__ == "__main__":
     site = Website(args.url)
 
     print(f"\n🌐 Title: {site.title}")
-    print("🧠 Summarizing page content using GPT-4o...")
+    print("🧠 Summarizing page content using llama3.2...")
 
     summary = summarize_text(site.text)
 
