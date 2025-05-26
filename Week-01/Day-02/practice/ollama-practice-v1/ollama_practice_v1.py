@@ -1,6 +1,5 @@
 # imports
 import requests
-from bs4 import BeautifulSoup
 
 # Constants
 OLLAMA_API = "http://localhost:11434/api/chat"
