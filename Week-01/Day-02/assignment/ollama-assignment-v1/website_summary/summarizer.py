@@ -2,21 +2,19 @@ import os
 from dotenv import load_dotenv
 from openai import OpenAI
 
-# Optional: Initialize once at import time (lazy)
-client = None
-
-def init_openai():
-    global client
-    load_dotenv(override=True)
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key:
-        raise RuntimeError("❌ No API key found in .env.")
-    #client = OpenAI(api_key=api_key)
-    client = OpenAI(base_url='http://localhost:11434/v1', api_key='ollama')
-
 def summarize_text(text, max_chars=2000, model="llama3.2"):
-    if client is None:
-        init_openai()
+    if model == "llama3.2":
+        client = OpenAI(base_url='http://localhost:11434/v1', api_key='ollama')
+    elif model == "gpt-4o":
+        load_dotenv(override=True)
+        api_key = os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            raise RuntimeError("❌ No API key found in .env.")
+        client = OpenAI(api_key = api_key )
+    else:
+        raise RuntimeError(f"❌ Call to LLM {model} is not supported.")
+    
+    print(f"summarizer.py will be using {model}")
     
     trimmed = text[:max_chars]
     

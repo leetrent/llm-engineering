@@ -6,14 +6,19 @@ from website_summary.summarizer import summarize_text
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Scrape and summarize a webpage")
     parser.add_argument("url", help="The URL of the website to summarize")
+    parser.add_argument("llm", help="The larguage language model to be used.")
     args = parser.parse_args()
+    
+    print("args.url", args.url)
+    print("args.llm", args.llm)
 
     site = Website(args.url)
 
     print(f"\n🌐 Title: {site.title}")
-    print("🧠 Summarizing page content using llama3.2...")
+    #print("🧠 Summarizing page content using llama3.2...")
+    print(f"Summarizing page content using {args.llm}:")
 
-    summary = summarize_text(site.text)
+    summary = summarize_text(site.text, model=args.llm)
 
     print(f"\n📄 Summary:\n{summary}")
 
