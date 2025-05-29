@@ -9,7 +9,8 @@ def main():
     url = sys.argv[1]
     try:
         site = Website(url)
-        print(site.links)
+        for link in site.links:
+            print(link)
     except RuntimeError as e:
         print(f"❌ Error: {e}")
 
