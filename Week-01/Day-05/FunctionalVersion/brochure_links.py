@@ -1,5 +1,7 @@
 import os
 from dotenv import load_dotenv
+from openai import OpenAI
+import json
 
 def get_brochure_links_from_website_links(url, website_links):
     # URL
@@ -26,8 +28,14 @@ def get_brochure_links_from_website_links(url, website_links):
     print(user_prompt)
     print("user_prompt: END")
           
+    # BROCHURE LINKS
+    brochure_links = get_brochure_links(api_key, system_prompt, user_prompt)
+    print("\nbrochure_links: BEGIN")
+    print(brochure_links)
+    print("brochure_links: END")
+    
     # RETURN BROCHURE LINKS
-    return website_links
+    return brochure_links
     
 def get_api_key():
     load_dotenv(override=True)
@@ -58,3 +66,18 @@ Do not include Terms of Service, Privacy, email links.\n"
     user_prompt += "Links (some might be relative links):\n"
     user_prompt += "\n".join(website_links)
     return user_prompt
+
+def get_brochure_links(api_key, system_prompt, user_prompt):
+    openai_client = OpenAI(api_key=api_key)
+    response = openai_client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt}
+      ],
+        response_format={"type": "json_object"}
+    )
+    result = response.choices[0].message.content
+    
+    print("\nJSON RESULT", result)
+    return json.loads(result)

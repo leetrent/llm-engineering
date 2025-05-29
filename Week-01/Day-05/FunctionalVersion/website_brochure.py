@@ -19,8 +19,7 @@ def main():
         # BROCHURE LINKS
         brochure_links = get_brochure_links_from_website_links(url, website_links)
         print("\nBROCHURE LINKS: BEGIN")
-        for brochure_link in brochure_links:
-            print(brochure_link)
+        print(brochure_links)
         print("BROCHURE LINKS: END")
     except RuntimeError as e:
         print(f"❌ Error: {e}")
