@@ -28,3 +28,15 @@ class LargeLanguageModel:
         )
         result = response.choices[0].message.content
         return json.loads(result)
+
+    def _create_completions(self):
+        openai_client = OpenAI(api_key=self._get_api_key())
+        response = openai_client.chat.completions.create(
+            model=self.model,
+            messages=[
+                {"role": "system", "content": self.system_prompt},
+                {"role": "user", "content": self.user_prompt}
+        ],
+        )
+        return response.choices[0].message.content
+   
