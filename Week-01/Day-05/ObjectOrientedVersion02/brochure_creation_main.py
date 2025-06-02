@@ -17,7 +17,7 @@ def main():
     try:
         # WEBSITE LINKS
         website = WebsiteDetails(url)
-        website._fetch_and_parse()
+        website._fetch()
         
         print("\nWEBSITE LINKS: BEGIN")
         for link in website.links:

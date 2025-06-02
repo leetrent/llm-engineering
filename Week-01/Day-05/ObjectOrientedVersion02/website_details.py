@@ -14,7 +14,7 @@ class WebsiteDetails:
         self.links = []
         self.content = "EMPTY"
         
-    def _fetch_and_parse(self):
+    def _fetch(self):
         try:
             response = requests.get(self.url, headers=self.headers, timeout=30)
             response.raise_for_status()
