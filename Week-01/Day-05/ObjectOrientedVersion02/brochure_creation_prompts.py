@@ -1,6 +1,6 @@
 from website_details import WebsiteDetails
 
-class BrochureCreationPrompt:
+class BrochureCreationPrompts:
     def __init__(self,company_name, website_content, brochure_links):
         self._set_system_prompt()
         self._set_user_prompt(company_name, website_content, brochure_links)
@@ -12,10 +12,9 @@ Include details of company culture, customers and careers/jobs if you have the i
     
     def _set_user_prompt(self, company_name, website_content, brochure_links):
         self.user_prompt = f"You are looking at a company called: {company_name}\n"
-        user_prompt += f"Here are the contents of its landing page and other relevant pages; use this information to build a short brochure of the company in markdown.\n"
-        user_prompt += self._build_website_details(website_content, brochure_links)
-        user_prompt = user_prompt[:5_000] # Truncate if more than 5,000 characters
-        return user_prompt
+        self.user_prompt += f"Here are the contents of its landing page and other relevant pages; use this information to build a short brochure of the company in markdown.\n"
+        self.user_prompt += self._build_website_details(website_content, brochure_links)
+        self.user_prompt = self.user_prompt[:5_000] # Truncate if more than 5,000 characters
     
     def _build_website_details(self, website_content, brochure_links):
         result = "Landing page:\n"

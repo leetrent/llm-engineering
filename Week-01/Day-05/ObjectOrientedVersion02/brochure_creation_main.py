@@ -1,6 +1,7 @@
 import sys
 from website_details import WebsiteDetails
 from brochure_links_prompts import BrochureLinksPrompts
+from brochure_creation_prompts import BrochureCreationPrompts
 from large_language_model import LargeLanguageModel
 
 def main():
@@ -25,11 +26,19 @@ def main():
         
         # BROCHURE LINKS
         brochure_links_prompts = BrochureLinksPrompts(url, website.links)
-        brochure_links = LargeLanguageModel("gpt-4o-mini", brochure_links_prompts.system_prompt, brochure_links_prompts.user_prompt)._create_completions_in_json()
+        brochure_links = LargeLanguageModel(AI_MODEL, brochure_links_prompts.system_prompt, brochure_links_prompts.user_prompt)._create_completions_in_json()
         
         print("\nBROCHURE LINKS: BEGIN")
         print(brochure_links)
         print("BROCHURE LINKS: END")
+        
+        # BROCHURE CREATION
+        brochure_creation_prompts = BrochureCreationPrompts(company_name, website.content, brochure_links)
+        company_brochure = LargeLanguageModel(AI_MODEL, brochure_creation_prompts.system_prompt, brochure_creation_prompts.user_prompt)._create_completions()
+        
+        print("\nCOMPANY BROCHURE: BEGIN")
+        print(company_brochure)
+        print("\nCOMPANY BROCHURE: END")
     except RuntimeError as e:
         print(f"❌ Error: {e}")
         
