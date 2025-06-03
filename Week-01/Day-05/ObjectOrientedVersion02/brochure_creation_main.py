@@ -28,7 +28,7 @@ def main():
         brochure_links_prompts = BrochureLinksPrompts(url, website.links)
         brochure_links = LargeLanguageModel(
             AI_MODEL, brochure_links_prompts.system_prompt, brochure_links_prompts.user_prompt
-        )._create_completions_in_json()
+        ).generate_json_response()
 
         print("\nBROCHURE LINKS: BEGIN")
         print(brochure_links)
@@ -50,7 +50,7 @@ def main():
 
         company_brochure = LargeLanguageModel(
             AI_MODEL, brochure_creation_prompts.system_prompt, brochure_creation_prompts.user_prompt
-        )._create_completions()
+        ).generate_text_response()
 
         print("\nCOMPANY BROCHURE: BEGIN")
         print(company_brochure)
