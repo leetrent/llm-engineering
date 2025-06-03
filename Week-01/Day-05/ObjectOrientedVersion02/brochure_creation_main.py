@@ -8,7 +8,7 @@ def main():
     AI_MODEL = "gpt-4o-mini"
     
     if len(sys.argv) < 3:
-        print("Usage: expcted two arguments <URL>, <COMPANY_NAME>")
+        print("Usage: expected two arguments <URL> <COMPANY_NAME>")
         sys.exit(1)
 
     url = sys.argv[1]
@@ -33,8 +33,11 @@ def main():
         print("BROCHURE LINKS: END")
         
         # BROCHURE CREATION
-        brochure_creation_prompts = BrochureCreationPrompts(company_name, website.content, brochure_links)
-        company_brochure = LargeLanguageModel(AI_MODEL, brochure_creation_prompts.system_prompt, brochure_creation_prompts.user_prompt)._create_completions()
+        brochure_creation_prompts = BrochureCreationPrompts(
+            company_name, brochure_links, build_website_details(website.content, brochure_links))
+        
+        company_brochure = LargeLanguageModel(
+            AI_MODEL, brochure_creation_prompts.system_prompt, brochure_creation_prompts.user_prompt)._create_completions()
         
         print("\nCOMPANY BROCHURE: BEGIN")
         print(company_brochure)
@@ -42,6 +45,16 @@ def main():
     except RuntimeError as e:
         print(f"❌ Error: {e}")
         
-        
+def build_website_details(index_page_content, brochure_links):
+    result = "Landing page:\n"
+    result += index_page_content
+    for link in brochure_links["links"]:
+        result += f"\n\n{link['type']}\n"
+        result += WebsiteDetails(link["url"]).content
+    return result
+    
+    
+    
+            
 if __name__ == "__main__":
     main()
