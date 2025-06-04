@@ -1,4 +1,5 @@
 import sys
+import os
 from website_details import WebsiteDetails
 from brochure_links_prompts import BrochureLinksPrompts
 from brochure_creation_prompts import BrochureCreationPrompts
@@ -8,7 +9,7 @@ def main():
     AI_MODEL = "gpt-4o-mini"
 
     if len(sys.argv) < 3:
-        print("Usage: expected two arguments <URL> <COMPANY_NAME>")
+        print("Usage: python brochure_creation_main.py <URL> <COMPANY_NAME>")
         sys.exit(1)
 
     url = sys.argv[1]
@@ -17,7 +18,7 @@ def main():
     try:
         # WEBSITE LINKS
         website = WebsiteDetails(url)
-        website._fetch()
+        website.fetch()
 
         print("\nWEBSITE LINKS: BEGIN")
         for link in website.links:
@@ -56,8 +57,19 @@ def main():
         print(company_brochure)
         print("\nCOMPANY BROCHURE: END")
 
+        # SAVE OUTPUT AS MARKDOWN
+        save_markdown(company_name, company_brochure)
+
     except RuntimeError as e:
         print(f"❌ Error: {e}")
+
+def save_markdown(company_name, brochure_text):
+    os.makedirs("./output", exist_ok=True)
+    filename_base = company_name.replace(" ", "_").lower()
+    filepath = f"./output/{filename_base}.md"
+    with open(filepath, "w", encoding="utf-8") as f:
+        f.write(brochure_text)
+    print(f"✅ Markdown brochure saved to: {filepath}")
 
 if __name__ == "__main__":
     main()
