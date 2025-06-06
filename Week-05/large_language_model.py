@@ -45,3 +45,19 @@ class LargeLanguageModel:
             return response.choices[0].message.content
         except Exception as e:
             raise RuntimeError(f"OpenAI text completion failed: {e}")
+
+    def stream_response(self):
+        try:
+            openai_client = OpenAI(api_key=self._get_api_key())
+            stream = openai_client.chat.completions.create(
+                model=self.model,
+                messages=[
+                    {"role": "system", "content": self.system_prompt},
+                    {"role": "user", "content": self.user_prompt}
+                ],
+                stream=True
+            )
+            for chunch in stream:
+                print(chunch.choices[0].delta.content or '', end='')
+        except Exception as e:
+            raise RuntimeError(f"OpenAI text completion failed: {e}")

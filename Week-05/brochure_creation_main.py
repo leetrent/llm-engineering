@@ -49,13 +49,17 @@ def main():
             company_name, website.content, brochure_links
         )
 
+        llm = LargeLanguageModel(
+            AI_MODEL, brochure_creation_prompts.system_prompt, brochure_creation_prompts.user_prompt)
+        llm.stream_response()
+
         company_brochure = LargeLanguageModel(
             AI_MODEL, brochure_creation_prompts.system_prompt, brochure_creation_prompts.user_prompt
         ).generate_text_response()
 
-        print("\nCOMPANY BROCHURE: BEGIN")
-        print(company_brochure)
-        print("\nCOMPANY BROCHURE: END")
+        # print("\nCOMPANY BROCHURE: BEGIN")
+        # print(company_brochure)
+        # print("\nCOMPANY BROCHURE: END")
 
         # SAVE OUTPUT AS MARKDOWN
         save_markdown(company_name, company_brochure)
