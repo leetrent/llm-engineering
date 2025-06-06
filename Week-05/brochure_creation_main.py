@@ -33,6 +33,10 @@ def main():
 
         print("\nBROCHURE LINKS: BEGIN")
         print(brochure_links)
+        print("\n")
+        for link in brochure_links["links"]:
+            print(link["type"], ' - ', link["url"])
+        print("\n")
         print("BROCHURE LINKS: END")
 
         # ENRICH LINKS WITH CONTENT
