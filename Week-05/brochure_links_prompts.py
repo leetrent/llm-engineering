@@ -9,16 +9,25 @@ class BrochureLinksPrompts:
         self.system_prompt = (
             "You are provided with a list of links found on a webpage. "
             "You are able to decide which of the links would be most relevant to include in a brochure about the company, "
-            "such as links to an About page, or a Company page, or Careers/Jobs pages.\n"
-            "You should respond in JSON as in this example:\n"
+            "such as links to the company or index page. "
+            "Please also add an 'About' section to this brochure if there is an 'about' or'about us' page. "
+            "Pleaee also add a 'Contact Us' section to this brochure if there is a 'contact' or 'contact us' page. "
+            "Please also add a 'Careers' section to this brochure if there is a 'careers' or 'jobs' page. "
+            "Please also add a section or sections to this brochure for topics not already discussed here "
+            "that you deem relevant to the creation of a company brochure.\n"
+            "Your response using one array of JSON object in the format specified below is mandatory. "
+            "The brochure content and the number of sections in this brochure will vary depending on the links that have been provided to you."
+            "Please respond with one array of JSON objects using this format:\n"
             + textwrap.dedent("""\
                 {
                     "links": [
-                        {"type": "about page", "url": "https://full.url/goes/here/about"},
-                        {"type": "careers page", "url": "https://another.full.url/careers"}
+                        {"type": "about page", "url": "https://<domain name>/"},
+                        {"type": "about page", "url": "https://<domain name>/about"},
+                        {"type": "careers page", "url": "https://<domain name>/careers"}
                     ]
                 }
             """)
+
         )
 
     def _set_user_prompt(self, url, website_links):
