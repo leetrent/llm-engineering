@@ -47,14 +47,25 @@ def print_brochure_links(brochure_links):
         print(link["type"], ' - ', link["url"])
     print("\n")
     print("BROCHURE LINKS: END")
-    
-    
-    
+       
 def process_brochure_links(url, website_links, ai_model):
     brochure_links = get_brochure_links(url, website_links, ai_model)
     enriched_brochure_links = enrich_brochure_links(brochure_links)
     print_brochure_links(enriched_brochure_links)
     return enriched_brochure_links
+
+def process_brochure_creation(company_name, website_content, brochure_links, ai_model):
+        brochure_creation_prompts = BrochureCreationPrompts(
+            company_name, website_content, brochure_links
+        )
+
+        llm = LargeLanguageModel(
+            ai_model, brochure_creation_prompts.system_prompt, brochure_creation_prompts.user_prompt)
+        llm.stream_response()
+        
+        return llm.generate_text_response()
+
+
     
 def main():
     AI_MODEL = "gpt-4o-mini"
@@ -80,28 +91,11 @@ def main():
         
         ################################################################################
         # BROCHURE CREATION
-        ################################################################################
-        print ("\n\nCreating company brochure...\n")
-        
-        brochure_creation_prompts = BrochureCreationPrompts(
-            company_name, website_content, brochure_links
-        )
-
-        llm = LargeLanguageModel(
-            AI_MODEL, brochure_creation_prompts.system_prompt, brochure_creation_prompts.user_prompt)
-        llm.stream_response()
-
-        company_brochure = LargeLanguageModel(
-            AI_MODEL, brochure_creation_prompts.system_prompt, brochure_creation_prompts.user_prompt
-        ).generate_text_response()
-
-        # print("\nCOMPANY BROCHURE: BEGIN")
-        # print(company_brochure)
-        # print("\nCOMPANY BROCHURE: END")
-        print ("\n\nDone creating company brochure...\n")
+        ################################################################################      
+        company_brochure = process_brochure_creation(company_name, website_content, brochure_links, AI_MODEL)
 
         # SAVE OUTPUT AS MARKDOWN
-        save_markdown(company_name, "English", company_brochure)
+        write_markdown_to_file(company_name, "English", company_brochure)
         
         ################################################################################
         # LANGUAGE TRANSLATION
@@ -111,11 +105,11 @@ def main():
             AI_MODEL, language_translation_prompts.system_prompt, language_translation_prompts.user_prompt)
         llm.stream_response()
         translated_company_brochure = llm.generate_text_response()
-        save_markdown(company_name, TARGET_LANGUAGE, translated_company_brochure)
+        write_markdown_to_file(company_name, TARGET_LANGUAGE, translated_company_brochure)
     except RuntimeError as e:
         print(f"❌ Error: {e}")
 
-def save_markdown(company_name, language, brochure_text):
+def write_markdown_to_file(company_name, language, brochure_text):
     print (f"\nWriting company brochure for {company_name} to file, written in {language}...\n")
     os.makedirs("./output", exist_ok=True)
     filename_base = company_name.replace(" ", "_").lower()
