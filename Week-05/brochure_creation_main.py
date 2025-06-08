@@ -6,9 +6,59 @@ from brochure_creation_prompts import BrochureCreationPrompts
 from large_language_model import LargeLanguageModel
 from language_translation_prompts import LanguageTranslationPrompts
 
+def get_website_links(url):
+    website = WebsiteDetails(url)
+    website.fetch()    
+    return website
+
+def print_website_links(website_links):
+        print("\nWEBSITE LINKS: BEGIN")
+        for link in website_links:
+            print(link)
+        print("WEBSITE LINKS: END")
+
+def process_website_links(url):
+    website = get_website_links(url)
+    print_website_links(website.links)
+    return website.links, website.content
+
+def get_brochure_links(url, website_links, ai_model):
+    brochure_links_prompts = BrochureLinksPrompts(url, website_links)
+    llm = LargeLanguageModel(
+        ai_model, brochure_links_prompts.system_prompt, brochure_links_prompts.user_prompt
+    )
+    return llm.generate_json_response()
+
+def enrich_brochure_links(brochure_links):
+    for link in brochure_links["links"]:
+        try:
+            enriched = WebsiteDetails(link["url"])
+            enriched.fetch()
+            link["content"] = enriched.content
+        except Exception as e:
+            link["content"] = "[Error fetching content]"    
+    return brochure_links
+    
+def print_brochure_links(brochure_links):
+    print("\nBROCHURE LINKS: BEGIN")
+    # print(brochure_links)
+    # print("\n")
+    for link in brochure_links["links"]:
+        print(link["type"], ' - ', link["url"])
+    print("\n")
+    print("BROCHURE LINKS: END")
+    
+    
+    
+def process_brochure_links(url, website_links, ai_model):
+    brochure_links = get_brochure_links(url, website_links, ai_model)
+    enriched_brochure_links = enrich_brochure_links(brochure_links)
+    print_brochure_links(enriched_brochure_links)
+    return enriched_brochure_links
+    
 def main():
     AI_MODEL = "gpt-4o-mini"
-    TARGET_LANGUAGE = "Hindi"
+    TARGET_LANGUAGE = "German"
 
     if len(sys.argv) < 3:
         print("Usage: python brochure_creation_main.py <URL> <COMPANY_NAME>")
@@ -21,42 +71,12 @@ def main():
         ################################################################################
         # WEBSITE LINKS
         ################################################################################
-        print("\n\nProcessing all website links ...\n")
-        website = WebsiteDetails(url)
-        website.fetch()
-
-        #print("\nWEBSITE LINKS: BEGIN")
-        for link in website.links:
-            print(link)
-        #print("WEBSITE LINKS: END")
-        print("\n\nDone processing all website links ...\n")
+        website_links, website_content = process_website_links(url)
 
         ################################################################################
         # BROCHURE LINKS
         ################################################################################
-        print("\n\nProcessing all brochure links ...\n")
-        brochure_links_prompts = BrochureLinksPrompts(url, website.links)
-        brochure_links = LargeLanguageModel(
-            AI_MODEL, brochure_links_prompts.system_prompt, brochure_links_prompts.user_prompt
-        ).generate_json_response()
-
-        # print("\nBROCHURE LINKS: BEGIN")
-        # print(brochure_links)
-        # print("\n")
-        # for link in brochure_links["links"]:
-        #     print(link["type"], ' - ', link["url"])
-        # print("\n")
-        # print("BROCHURE LINKS: END")
-
-        # ENRICH LINKS WITH CONTENT
-        for link in brochure_links["links"]:
-            try:
-                enriched = WebsiteDetails(link["url"])
-                enriched.fetch()
-                link["content"] = enriched.content
-            except Exception as e:
-                link["content"] = "[Error fetching content]"
-        print("\n\nDone processing all brochure links ...\n")
+        brochure_links = process_brochure_links(url, website_links, AI_MODEL)
         
         ################################################################################
         # BROCHURE CREATION
@@ -64,7 +84,7 @@ def main():
         print ("\n\nCreating company brochure...\n")
         
         brochure_creation_prompts = BrochureCreationPrompts(
-            company_name, website.content, brochure_links
+            company_name, website_content, brochure_links
         )
 
         llm = LargeLanguageModel(
