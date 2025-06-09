@@ -5,6 +5,7 @@ from brochure_links_prompts import BrochureLinksPrompts
 from brochure_creation_prompts import BrochureCreationPrompts
 from large_language_model import LargeLanguageModel
 from language_translation_prompts import LanguageTranslationPrompts
+from markdown_utils import clean_translated_output
 
 def get_website_links(url):
     website = WebsiteDetails(url)
@@ -65,7 +66,12 @@ def process_brochure_creation(company_name, website_content, brochure_links, ai_
         
         return llm.generate_text_response()
 
-
+def process_language_translation(company_brochure, target_language, ai_model):
+    language_translation_prompts = LanguageTranslationPrompts(company_brochure, target_language)
+    llm = LargeLanguageModel(
+        ai_model, language_translation_prompts.system_prompt, language_translation_prompts.user_prompt)
+    llm.stream_response()
+    return llm.generate_text_response()
     
 def main():
     AI_MODEL = "gpt-4o-mini"
@@ -93,19 +99,24 @@ def main():
         # BROCHURE CREATION
         ################################################################################      
         company_brochure = process_brochure_creation(company_name, website_content, brochure_links, AI_MODEL)
+        cleaned_company_brochure = clean_translated_output(company_brochure)
 
-        # SAVE OUTPUT AS MARKDOWN
-        write_markdown_to_file(company_name, "English", company_brochure)
+        ################################################################################
+        # SAVE BROCHURE WRITTEN IN ENGLISH AS MARKDOWN
+        ################################################################################
+        write_markdown_to_file(company_name, "English", cleaned_company_brochure)
         
         ################################################################################
         # LANGUAGE TRANSLATION
         ################################################################################
-        language_translation_prompts = LanguageTranslationPrompts(company_brochure, to_language=TARGET_LANGUAGE)
-        llm = LargeLanguageModel(
-            AI_MODEL, language_translation_prompts.system_prompt, language_translation_prompts.user_prompt)
-        llm.stream_response()
-        translated_company_brochure = llm.generate_text_response()
-        write_markdown_to_file(company_name, TARGET_LANGUAGE, translated_company_brochure)
+        translated_company_brochure = process_language_translation(company_brochure, TARGET_LANGUAGE, AI_MODEL)
+        cleaned_translated_company_brochure = clean_translated_output(translated_company_brochure)
+        
+        ################################################################################
+        # SAVE BROCHURE WRITTEN IN THE TARGET  AS MARKDOWN
+        ################################################################################
+        write_markdown_to_file(company_name, TARGET_LANGUAGE, cleaned_translated_company_brochure)
+        
     except RuntimeError as e:
         print(f"❌ Error: {e}")
 
