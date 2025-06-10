@@ -75,7 +75,7 @@ def process_language_translation(company_brochure, target_language, ai_model):
     
 def main():
     AI_MODEL = "gpt-4o-mini"
-    TARGET_LANGUAGE = "Japanese"
+    TARGET_LANGUAGE = "German"
 
     if len(sys.argv) < 3:
         print("Usage: python brochure_creation_main.py <URL> <COMPANY_NAME>")
