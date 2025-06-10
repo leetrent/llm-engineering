@@ -12,6 +12,8 @@ Thumbs.db
 # Ignore log and output files
 *.log
 *.txt
+*.md
+output/
 
 # VSCode settings (optional)
 .vscode/
