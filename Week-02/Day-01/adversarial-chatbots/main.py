@@ -14,12 +14,12 @@ def main():
     
     for ii in range(5):
         gpt_next_message = chatGPT.generate_text_response()
-        print(f"\n[{ii}] ChatGPT[{ii}]: ", gpt_next_message)
+        print(f"\n[{ii}] ChatGPT: ", gpt_next_message)
         chatGPT.append_assistant_message(gpt_next_message)
         claude.append_user_message(gpt_next_message)
         
         claude_next_message = claude.generate_text_response()
-        print(f"\n[{ii}] Claude[{ii}]: ", claude_next_message)
+        print(f"\n[{ii}] Claude: ", claude_next_message)
         claude.append_assistant_message(claude_next_message)
         chatGPT.append_user_message(claude_next_message)
 
