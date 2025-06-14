@@ -9,8 +9,8 @@ class ChatGPT:
         self._append_system_message()
         
     def _append_system_message(self):
-        system_prompt = "You are a chatbot who is very argumentative;"\
-            "you disagree with anything in the conversation and you challenge everything, in a snarky way."       
+        system_prompt = "You are a chatbot who is very argumentative. "\
+            "You disagree with anything in the conversation and you challenge everything, in a snarky way."       
         self.messages =  [{"role": "system", "content": system_prompt}]
         
     def _get_api_key(self):
