@@ -1,13 +1,19 @@
 from chatgpt import ChatGPT
 from claude import Claude
+from transcript import Transcript
 
 def main():
     
     ################################################################################        
-    # Instantiate both the ChatGPT and Claude classes
+    # Instantiate the ChatGPT and Claude classes
     ################################################################################
     chatGPT = ChatGPT()
     claude = Claude()
+    
+    ################################################################################        
+    # Instantiate Transcript class and wipe the transcript clean
+    ################################################################################
+    transcript = Transcript("AdversarialChatbotConversation-Lee.txt")
     
     ################################################################################        
     # ChatGPT initiates conversation
@@ -19,7 +25,12 @@ def main():
     # Claude replies back first
     ################################################################################
     claude_first_reply = claude.generate_text_response()
-    print(f"\n[{-1}] Claude: ", claude_first_reply)
+    
+    ################################################################################        
+    # Write Claude's first reply to the transcript log and to the console.
+    ################################################################################
+    transcript.log("Claude", -1, claude_first_reply)
+    print(f"\n[{-1}] Claude:\n", claude_first_reply)
     
     ################################################################################        
     # Append Claude's first reply to ChatGPT's list of user messages
@@ -35,18 +46,33 @@ def main():
     # Conversation Loop
     ################################################################################
     print("\n=== Conversation Loop ===")   
-    for ii in range(5):        
+    for ii in range(5):    
+        ################################################################################        
+        # Process ChatGPT's next message
+        ################################################################################    
         gpt_next_message = chatGPT.generate_text_response()
-        print(f"\n[{ii}] ChatGPT: ", gpt_next_message)
         chatGPT.append_assistant_message(gpt_next_message)
         claude.append_user_message(gpt_next_message)
         
+        ################################################################################        
+        # Write ChatGPT's message to the transcript log and to the console.
+        ################################################################################
+        transcript.log("ChatGPT", ii, gpt_next_message)
+        print(f"\n[{ii}] ChatGPT:\n", gpt_next_message)
+        
+        ################################################################################        
+        # Process Claude's next message
+        ################################################################################ 
         claude_next_message = claude.generate_text_response()
-        print(f"\n[{ii}] Claude: ", claude_next_message)
         claude.append_assistant_message(claude_next_message)
         chatGPT.append_user_message(claude_next_message)
         
-
+        ################################################################################        
+        # Write Claude's message to the transcript log and to the console.
+        ################################################################################
+        transcript.log("Claude", ii, claude_next_message)
+        print(f"\n[{ii}] Claude:\n", claude_next_message)
+     
 
     # print("\nChatGPT Initial Messages:")
     # for message in chatGPT.messages:
