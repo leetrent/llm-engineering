@@ -72,15 +72,6 @@ def main():
         ################################################################################
         transcript.log("Claude", ii, claude_next_message)
         print(f"\n[{ii}] Claude:\n", claude_next_message)
-     
-
-    # print("\nChatGPT Initial Messages:")
-    # for message in chatGPT.messages:
-    #     print(f"\nRole: {message['role']}\nContent: {message['content']}")
-        
-    # print("\nClaude Initial Messages:")
-    # for message in claude.messages:
-    #     print(f"\nRole: {message['role']}\nContent: {message['content']}")
 
 if __name__ == "__main__":
     main()
