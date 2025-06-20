@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 import anthropic
 import google.generativeai as genai
+import gradio as gr
 
 def _get_api_key(api_key):
     load_dotenv(override=True)
@@ -24,7 +25,7 @@ def stream_chatgpt(user_prompt):
             messages=messages,
             stream=True
         )
-        result = ""
+        result = "<H1>ChatGPT</H1>"
         for chunk in stream:
             result += chunk.choices[0].delta.content or ""
             yield result
@@ -44,7 +45,7 @@ def stream_claude(user_prompt):
                 {"role": "user", "content": user_prompt},
             ],
         )
-        response = ""
+        response = "<H1>Claude</H1>"
         with result as stream:
             for text in stream.text_stream:
                 response += text or ""
@@ -53,6 +54,7 @@ def stream_claude(user_prompt):
         raise RuntimeError(f"Call to Claude failed: {e}")
     
 def stream_gemini(user_prompt):
+    print(f"[main.py][stream_gemini] => (user_prompt): '{user_prompt}'")
     """
     Makes a streaming API call to the Gemini model and yields the response in chunks.
     """
@@ -60,7 +62,7 @@ def stream_gemini(user_prompt):
         print(f"[main-gemini.py][stream_gemini] => (user_prompt): '{user_prompt}'")
 
         # Configure the generative AI model with your API key
-        genai.configure(api_key=_get_api_key())
+        genai.configure(api_key=_get_api_key("GEMINI_API_KEY"))
 
         # Initialize the Gemini Pro model
         # For streaming, 'gemini-pro' is a good choice. 'gemini-1.5-flash' also supports streaming.
@@ -73,10 +75,36 @@ def stream_gemini(user_prompt):
         # Generate content with streaming enabled
         response_stream = chat.send_message(user_prompt, stream=True)
 
-        result = ""
+        result = "<H1>Gemini</H1>"
         # Iterate through the streamed response chunks
         for chunk in response_stream:
             result += chunk.text
             yield result # Yield each chunk to Gradio
     except Exception as e:
         raise RuntimeError(f"Call to Gemini failed: {e}")
+    
+def stream_model(user_prompt, model):
+    print(f"[main.py][stream_model] => (model)......: '{model}'")
+    print(f"[main.py][stream_model] => (user_prompt): '{user_prompt}'")
+    
+    if model=="ChatGPT":
+        result = stream_chatgpt(user_prompt)
+    elif model=="Claude":
+        result = stream_claude(user_prompt)
+    elif model=="Gemini":
+        result = stream_gemini(user_prompt)
+    else:
+        raise ValueError("Unknown model")
+    
+    yield from result
+    
+def main():
+    gr.Interface(
+        fn=stream_model,
+        inputs=[gr.Textbox(label="Your message:"), gr.Dropdown(["ChatGPT", "Claude", "Gemini"], label="Select model", value="ChatGPT")],
+        outputs=[gr.Markdown(label="Response:")],
+        flagging_mode="never"
+    ).launch(share=True)
+        
+if __name__ == "__main__":
+    main()
