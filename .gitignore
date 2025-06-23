@@ -17,3 +17,6 @@ output/
 
 # VSCode settings (optional)
 .vscode/
+
+# Gradio
+.gradio/
