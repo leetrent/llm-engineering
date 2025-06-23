@@ -5,7 +5,7 @@ from claude import Claude
 from gemini import Gemini
 import gradio as gr
 
-def stream_brochure(company_name, url, model):
+def stream_brochure(company_name, url, model, language):
     website = WebsiteDetails(url)
     website.fetch()
     
@@ -15,7 +15,9 @@ def stream_brochure(company_name, url, model):
     print("text", website.text)
     print("content:\n", website.content)
     
-    prompts = BrochureCreationPrompts(company_name, website.content)
+    print(f"\nLanguage: '{language}'")
+    
+    prompts = BrochureCreationPrompts(company_name, website.content, language)
     
     print("\nSYSTEM PROMPT:\n", prompts.system_prompt)
     print("\nUSER PROMPT:\n", prompts.user_prompt)
@@ -40,6 +42,7 @@ def main():
             gr.Textbox(label="Company Name:"),
             gr.Textbox(label="URL:"),
             gr.Dropdown(["ChatGPT", "Claude", "Gemini"], label="Select Model:"),
+            gr.Dropdown(["English", "French", "Italian", "Spanish", "Portuguese", "Mandarin Chinese", "Hindi", "Standard Arabic", "Russian"], label="Select Language:", value="English")
         ],
         outputs=[gr.Markdown(label="Response:")],
         flagging_mode="never"
