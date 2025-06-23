@@ -7,7 +7,13 @@ import gradio as gr
 
 def stream_brochure(company_name, url, model):
     website = WebsiteDetails(url)
-    website.fetch
+    website.fetch()
+    
+    print("\nWEBSITE DETAILS:\n")
+    print("url:", website.url)
+    print("title", website.title)
+    print("text", website.text)
+    print("content:\n", website.content)
     
     prompts = BrochureCreationPrompts(company_name, website.content)
     
