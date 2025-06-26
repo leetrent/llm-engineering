@@ -34,7 +34,7 @@ class Gemini:
 
             # Generate content with streaming enabled
             response_stream = chat.send_message(
-                parts=last_message["parts"],
+                content=last_message["parts"],
                 stream=True
             )
 

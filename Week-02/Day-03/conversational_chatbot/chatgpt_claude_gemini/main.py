@@ -5,7 +5,7 @@ from claude import Claude
 from gemini import Gemini
 import gradio as gr
 
-model = "Claude"
+model = "Gemini"
 system_message = "You are a friendly, helpful and honest assistant who answers all questions pertaining to veganism and only veganism and responds in markdown."
 
 def convert_to_claude(messages):
@@ -17,8 +17,6 @@ def convert_to_claude(messages):
         for msg in messages
     ]
 
-
-
 def convert_to_gemini(messages):
     return [
         {
@@ -28,15 +26,15 @@ def convert_to_gemini(messages):
         for msg in messages
     ]
 
-
-def chat_with_gpt(message, history):
-    try:
+def chat_with_llm(message, history):
+    try:        
+        
         ##########################################################################
         # MESSAGE
         ##########################################################################   
-        print(f"\nMESSAGE:")
-        print(f"\n{message}")  
-            
+        print(f"\nMESSAGE:")  
+        print(message)    
+               
         ##########################################################################
         # HISTORY
         ##########################################################################   
@@ -48,25 +46,11 @@ def chat_with_gpt(message, history):
         # USER AND ASSISTANT MESSAGES
         ##########################################################################
         user_assistant_messages = history + [{"role": "user", "content": message}]
-        print(f"\nUSER AND ASSISTANT MESSAGES:")  
-        for ua_message in user_assistant_messages:
-            print(f"\n{ua_message}")
-            
-        ##########################################################################
-        # CONVERT TO GEMINI
-        ##########################################################################  
-        gemini_messages = convert_to_gemini(user_assistant_messages)   
-        print(f"\nGEMINI MESSAGES:")  
-        for gemini_message in gemini_messages:
-            print(f"\n{gemini_message}")
             
         ##########################################################################
         # ALL MESSAGES
         ##########################################################################
         all_messages = [{"role": "system", "content": system_message}] + history + [{"role": "user", "content": message}]
-        print(f"\nALL  MESSAGES:")  
-        for all_message in all_messages:
-            print(f"\n{all_message}")      
                
         if model == "ChatGPT":
             result = ChatGPT(all_messages).stream_response()
@@ -82,7 +66,7 @@ def chat_with_gpt(message, history):
         raise RuntimeError(f"Call to {model} failed: {e}")
   
 def main():
-    gr.ChatInterface(fn=chat_with_gpt, type="messages").launch(share=True)
+    gr.ChatInterface(fn=chat_with_llm, type="messages").launch(share=True)
     
 if __name__ == "__main__":
   main()
