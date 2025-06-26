@@ -15,9 +15,10 @@ def chat_with_gpt(message, history):
         print(f"[main.py][chat_with_gpt] => (message):")
         print(message)  
             
-        print(f"[main.py][chat_with_gpt] => (history):")  
+        print(f"\n[main.py][chat_with_gpt] => (history):")  
         for hist in history:
-            print(f"Role: {hist['role']}, Content: {hist['content']}")
+            print(f"Role: {hist['role']},\nContent: {hist['content']}")
+        print("")
         
         system_message = "You are a friendly, helpful and honest assistant who answers all questions pertaining to veganism and only veganism and responds in markdown."
         messages = [{"role": "system", "content": system_message}] + history + [{"role": "user", "content": message}]
