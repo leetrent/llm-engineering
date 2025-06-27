@@ -1,5 +1,5 @@
 import os
-import sys
+from dotenv import load_dotenv
 from chatgpt import ChatGPT
 from claude import Claude
 from gemini import Gemini
@@ -27,7 +27,15 @@ def convert_to_gemini(messages):
     ]
 
 def chat_with_llm(message, history):
-    try:        
+    try:     
+        load_dotenv(override=True)   
+        model = os.getenv("TARGET_MODEL", "ChatGPT")
+        
+        ##########################################################################
+        # MESSAGE
+        ##########################################################################   
+        print(f"\nTARGET_MODEL:")  
+        print(model)    
         
         ##########################################################################
         # MESSAGE
