@@ -10,12 +10,12 @@ class Claude:
         self.current_message = curr_msg
         self.nonsystem_messages = self._prepare_nonsystem_messages()
         
-        print("\nCLAUDE (system_message)")
-        print(self.system_message)
-        print("\nCLAUDE (message_history)")
-        print(self.message_history)
-        print("\nCLAUDE (current_message)")
-        print(self.current_message)  
+        # print("\nCLAUDE (system_message)")
+        # print(self.system_message)
+        # print("\nCLAUDE (message_history)")
+        # print(self.message_history)
+        # print("\nCLAUDE (current_message)")
+        # print(self.current_message)  
 
     def _get_api_key(self):
         load_dotenv(override=True)

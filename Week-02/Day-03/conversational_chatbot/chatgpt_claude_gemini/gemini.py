@@ -10,12 +10,12 @@ class Gemini:
         # self.current_message = self._convert_for_gemini(curr_msg)
         self.current_message = curr_msg
         
-        print("\nGEMINI (system_message)")
-        print(self.system_message)
-        print("\nGEMINI (message_history)")
-        print(self.message_history)
-        print("\nGEMINI (current_message)")
-        print(self.current_message)    
+        # print("\nGEMINI (system_message)")
+        # print(self.system_message)
+        # print("\nGEMINI (message_history)")
+        # print(self.message_history)
+        # print("\nGEMINI (current_message)")
+        # print(self.current_message)    
 
     def _get_api_key(self):
         load_dotenv(override=True)

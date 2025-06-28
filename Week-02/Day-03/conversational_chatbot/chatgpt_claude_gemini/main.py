@@ -19,15 +19,15 @@ def chat_with_llm(message, history):
         ##########################################################################
         # MESSAGE
         ##########################################################################   
-        print(f"\nMAIN (current_message:")  
-        print(message)    
+        # print(f"\nMAIN (current_message:")  
+        # print(message)    
                
         ##########################################################################
         # HISTORY
         ##########################################################################   
-        print(f"\nMAIN (MESSAGE_HISTORY):")  
-        for hist in history:
-            print(f"\n{hist}")     
+        # print(f"\nMAIN (MESSAGE_HISTORY):")  
+        # for hist in history:
+        #     print(f"\n{hist}")     
     
         ##########################################################################
         # USER AND ASSISTANT MESSAGES

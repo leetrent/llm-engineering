@@ -10,14 +10,14 @@ class ChatGPT:
         self.current_message = curr_msg
         self.all_messages = self._prepare_all_messages()
         
-        print("\nChatGPT (system_message)")
-        print(self.system_message)
-        print("\nChatGPT (message_history)")
-        print(self.message_history)
-        print("\nChatGPT (current_message)")
-        print(self.current_message)  
-        print("\nChatGPT (all_messages)")
-        print(self.all_messages)  
+        # print("\nChatGPT (system_message)")
+        # print(self.system_message)
+        # print("\nChatGPT (message_history)")
+        # print(self.message_history)
+        # print("\nChatGPT (current_message)")
+        # print(self.current_message)  
+        # print("\nChatGPT (all_messages)")
+        # print(self.all_messages)  
 
     def _get_api_key(self):
         load_dotenv(override=True)
