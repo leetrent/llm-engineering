@@ -5,27 +5,6 @@ from claude import Claude
 from gemini import Gemini
 import gradio as gr
 
-model = "Gemini"
-system_message = "You are a friendly, helpful and honest assistant who answers all questions pertaining to veganism and only veganism and responds in markdown."
-
-def convert_to_claude(messages):
-    return [
-        {
-            "role": msg["role"],
-            "content": msg["content"]
-        }
-        for msg in messages
-    ]
-
-def convert_to_gemini(messages):
-    return [
-        {
-            "role": msg["role"],
-            "parts": [{"text": msg["content"]}]
-        }
-        for msg in messages
-    ]
-
 def chat_with_llm(message, history):
     try:     
         load_dotenv(override=True)   
@@ -34,38 +13,40 @@ def chat_with_llm(message, history):
         ##########################################################################
         # MESSAGE
         ##########################################################################   
-        print(f"\nTARGET_MODEL:")  
+        print(f"\nMAIN (target_model):")  
         print(model)    
         
         ##########################################################################
         # MESSAGE
         ##########################################################################   
-        print(f"\nMESSAGE:")  
+        print(f"\nMAIN (current_message:")  
         print(message)    
                
         ##########################################################################
         # HISTORY
         ##########################################################################   
-        print(f"\nHISTORY:")  
+        print(f"\nMAIN (MESSAGE_HISTORY):")  
         for hist in history:
             print(f"\n{hist}")     
     
         ##########################################################################
         # USER AND ASSISTANT MESSAGES
         ##########################################################################
-        user_assistant_messages = history + [{"role": "user", "content": message}]
+        # user_assistant_messages = history + [{"role": "user", "content": message}]
             
         ##########################################################################
         # ALL MESSAGES
         ##########################################################################
-        all_messages = [{"role": "system", "content": system_message}] + history + [{"role": "user", "content": message}]
+        # all_messages = [{"role": "system", "content": system_message}] + history + [{"role": "user", "content": message}]
+        
+        system_message = "You are a friendly, helpful and honest assistant who answers all questions pertaining to veganism and only veganism and responds in markdown."
                
         if model == "ChatGPT":
-            result = ChatGPT(all_messages).stream_response()
+            result = ChatGPT(system_message, history, message).stream_response()
         elif model == "Claude":
-            result = Claude(system_message, convert_to_claude(user_assistant_messages)).stream_response()
+            result = Claude(system_message, history, message).stream_response()
         elif model == "Gemini":
-            result = Gemini(system_message, convert_to_gemini(user_assistant_messages)).stream_response()
+            result = Gemini(system_message, history, message).stream_response()
         else:
             raise ValueError(f"Unsupported model: {model}")
     

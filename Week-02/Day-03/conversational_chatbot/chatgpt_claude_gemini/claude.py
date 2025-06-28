@@ -2,11 +2,20 @@ import os
 from dotenv import load_dotenv
 import anthropic
 
-class Claude:
-    def __init__(self, system_message, user_assistant_messages):
+class Claude:       
+    def __init__(self, sys_msg, msg_hist, curr_msg):
         self.model = "claude-3-haiku-20240307"
-        self.system_message = system_message
-        self.user_assistant_messages = user_assistant_messages
+        self.system_message = sys_msg
+        self.message_history = msg_hist
+        self.current_message = curr_msg
+        self.nonsystem_messages = self._prepare_nonsystem_messages()
+        
+        print("\nCLAUDE (system_message)")
+        print(self.system_message)
+        print("\nCLAUDE (message_history)")
+        print(self.message_history)
+        print("\nCLAUDE (current_message)")
+        print(self.current_message)  
 
     def _get_api_key(self):
         load_dotenv(override=True)
@@ -23,12 +32,21 @@ class Claude:
                 max_tokens=1000,
                 temperature=0.7,
                 system=self.system_message,
-                messages=self.user_assistant_messages,
+                messages=self.nonsystem_messages
             )
-            response = "<h1>Claude</h1>"
+            response = ""
             with result as stream:
                 for text in stream.text_stream:
                     response += text or ""
                     yield response
         except Exception as e:
             raise RuntimeError(f"API call to Claude failed: {e}")
+        
+    def _prepare_nonsystem_messages(self):
+        return [
+            {
+                "role": msg["role"],
+                "content": msg["content"]
+            }
+            for msg in self.message_history + [{"role": "user", "content": self.current_message}]
+        ]
