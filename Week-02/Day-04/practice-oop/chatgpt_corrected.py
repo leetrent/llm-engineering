@@ -1,4 +1,6 @@
+
 import os
+import json
 from dotenv import load_dotenv
 from openai import OpenAI
 from airline_tools import AirlineTools
@@ -10,7 +12,7 @@ class ChatGPT:
         self.message_history = msg_hist
         self.current_message = curr_msg
         self.all_messages = self._prepare_all_messages()
-        
+
         print("\nChatGPT (system_message)")
         print(self.system_message)
         print("\nChatGPT (message_history)")
@@ -26,26 +28,28 @@ class ChatGPT:
         if not api_key:
             raise RuntimeError("❌ No API key found in .env for ChatGPT.")
         return api_key
-           
+
     def generate_text_response(self):
         print("\n[ChatGPT][generate_text_response]\n")
         airline_tools = AirlineTools()
         openai_client = OpenAI(api_key=self._get_api_key())
+
+        # ✅ Corrected tool definition usage
         response = openai_client.chat.completions.create(
-            model=self.model, 
-            messages=self.all_messages, 
+            model=self.model,
+            messages=self.all_messages,
             tools=airline_tools.price_function_tool
         )
-        
-        if response.choices[0].finish_reason=="tool_calls":
+
+        if response.choices[0].finish_reason == "tool_calls":
             message = response.choices[0].message
             response, city = airline_tools.handle_price_function_tool_call(message)
             self.all_messages.append(message)
             self.all_messages.append(response)
             response = openai_client.chat.completions.create(model=self.model, messages=self.all_messages)
-    
+
         return response.choices[0].message.content
-        
+
     def _prepare_all_messages(self):
         return [
             {

@@ -1,4 +1,5 @@
 import os
+import json
 from dotenv import load_dotenv
 from chatgpt import ChatGPT
 import gradio as gr
@@ -22,8 +23,8 @@ def chat_with_llm(message, history):
             result = ChatGPT(system_message, history, message).generate_text_response()
         else:
             raise ValueError(f"Unsupported model: {model}")
-    
-        result
+           
+        return result
     except Exception as e:
         raise RuntimeError(f"Call to {model} failed: {e}")
   

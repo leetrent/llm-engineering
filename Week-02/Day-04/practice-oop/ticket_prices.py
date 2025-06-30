@@ -9,7 +9,7 @@ class TicketPrices:
                               "tokyo": "$799", 
                               "copenhagen": "$899"}
         
-def get_ticket_price(self, destination_city):
-    #print(f"Tool get_ticket_price called for {destination_city}")
-    city = destination_city.lower()
-    return self.ticket_prices.get(city, "Unknown")
+    def get_ticket_price(self, destination_city):
+        #print(f"Tool get_ticket_price called for {destination_city}")
+        city = destination_city.lower()
+        return self.ticket_prices.get(city, "Unknown")
