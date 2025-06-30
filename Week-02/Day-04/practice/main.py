@@ -10,7 +10,14 @@ system_message = "You are a helpful assistant for an Airline called FlightAI. "
 system_message += "Give short, courteous answers, no more than 1 sentence. "
 system_message += "Always be accurate. If you don't know the answer, say so."
 
-ticket_prices = {"london": "$799", "paris": "$899", "tokyo": "$1400", "berlin": "$499"}
+ticket_prices = {"london": "$199", 
+                "paris": "$299", 
+                "new york": "399", 
+                "amsterdam": "$499",
+                "munich": "$599",
+                "milan": "$699",
+                "tokyo": "$799", 
+                "copenhagen": "$899"}
 
 price_function = {
     "name": "get_ticket_price",
