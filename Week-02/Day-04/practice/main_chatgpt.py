@@ -45,7 +45,6 @@ def get_api_key():
     return api_key
 
 def get_ticket_price(destination_city):
-    #print(f"Tool get_ticket_price called for {destination_city}")
     city = destination_city.lower()
     return ticket_prices.get(city, "Unknown")
     
@@ -61,12 +60,7 @@ def handle_tool_call(message):
     }
     return response, city
     
-def chat(message, history):
-    print("MESSAGE:\n", message)
-    print("HISTORY:\n", history)
-    for hist in history:
-        print(f"\n{hist}")
-    
+def chat(message, history):   
     messages = [{"role": "system", "content": system_message}] + history + [{"role": "user", "content": message}]
     openai = OpenAI(api_key=get_api_key())
     response = openai.chat.completions.create(model=MODEL, messages=messages, tools=tools)
