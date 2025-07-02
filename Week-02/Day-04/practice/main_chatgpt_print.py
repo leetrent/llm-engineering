@@ -51,31 +51,31 @@ def get_ticket_price(destination_city):
     
 def handle_tool_call(message):
     print("")
-    print(f"[ChatGPT][handle_too_call] => (message)")
+    print(f"[ChatGPT][handle_tool_call] => (message)")
     print(message)
     print("")
     
     tool_call = message.tool_calls[0]
     print("")
-    print(f"[ChatGPT][handle_too_call] => (tool_call)")
+    print(f"[ChatGPT][handle_tool_call] => (tool_call)")
     print(tool_call)
     print("")
      
     arguments = json.loads(tool_call.function.arguments)
     print("")
-    print(f"[ChatGPT][handle_too_call] => (arguments)")
+    print(f"[ChatGPT][handle_tool_call] => (arguments)")
     print(arguments)
     print("")
     
     city = arguments.get('destination_city')
     print("")
-    print(f"[ChatGPT][handle_too_call] => (city)")
+    print(f"[ChatGPT][handle_tool_call] => (city)")
     print(city)
     print("")
     
     price = get_ticket_price(city)
     print("")
-    print(f"[ChatGPT][handle_too_call] => (price)")
+    print(f"[ChatGPT][handle_tool_call] => (price)")
     print(price)
     print("")  
     
@@ -85,7 +85,7 @@ def handle_tool_call(message):
         "tool_call_id": tool_call.id
     }
     print("")
-    print(f"[ChatGPT][handle_too_call] => (response)")
+    print(f"[ChatGPT][handle_tool_call] => (response)")
     print(response)
     print("")    
     

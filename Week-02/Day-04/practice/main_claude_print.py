@@ -49,21 +49,37 @@ def get_ticket_price(destination_city):
     return ticket_prices.get(city, "Unknown")
     
 def handle_tool_call(tool_use):
+    print("")
+    print(f"[Claude][handle_tool_call] => (tool_use):")
+    print(tool_use)
+    print("")
+    
     city = tool_use.input.get('destination_city')
+    print("")
+    print(f"[Claude][handle_tool_call] => (city):")
+    print(city)
+    print("")
+    
     price = get_ticket_price(city)
+    print("")
+    print(f"[Claude][handle_tool_call] => (price)")
+    print(price)
+    print("")  
+    
     response = {
         "type": "tool_result",
         "tool_use_id": tool_use.id,
         "content": json.dumps({"destination_city": city, "price": price})
     }
+    
+    print("")
+    print(f"[Claude][handle_tool_call] => (response)")
+    print(response)
+    print("")    
+    
     return response, city
     
-def chat(message, history):
-    print("MESSAGE:\n", message)
-    print("HISTORY:\n", history)
-    for hist in history:
-        print(f"\n{hist}")
-    
+def chat(message, history):   
     # Convert history to Anthropic format
     messages = []
     for hist in history:
@@ -79,6 +95,11 @@ def chat(message, history):
         messages=messages, 
         tools=tools
     )
+    
+    print("")
+    print(f"[Claude][chat] => (response #1):")
+    print(response)
+    print("")   
 
     # Handle tool calls
     if response.stop_reason == "tool_use":
@@ -111,6 +132,11 @@ def chat(message, history):
                 messages=messages
             )
 
+    print("")
+    print(f"[Claude][chat] => (response #2):")
+    print(response)
+    print("")   
+    
     return response.content[0].text
   
 def main():
