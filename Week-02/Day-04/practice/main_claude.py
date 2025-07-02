@@ -44,7 +44,6 @@ def get_api_key():
     return api_key
 
 def get_ticket_price(destination_city):
-    #print(f"Tool get_ticket_price called for {destination_city}")
     city = destination_city.lower()
     return ticket_prices.get(city, "Unknown")
     
