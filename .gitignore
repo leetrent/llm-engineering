@@ -13,6 +13,7 @@ Thumbs.db
 *.log
 *.txt
 *.md
+*.csv
 output/
 
 # VSCode settings (optional)
