@@ -17,20 +17,7 @@ class TicketPrices:
         self.system_message =   "You are a helpful assistant for an Airline called FlightAI. " \
                                 "Give short, courteous answers, no more than 1 sentence. " \
                                 "Always be accurate. If you don't know the answer, say so."
-                                
-    # def _set_ticket_prices(self):
-    #     self.ticket_prices = {  "london": "$199.99", 
-    #                             "paris": "$299.99", 
-    #                             "new york": "$399.99", 
-    #                             "amsterdam": "$499.99",
-    #                             "munich": "$599.99",
-    #                             "milan": "$699.99",
-    #                             "tokyo": "$799.99", 
-    #                             "copenhagen": "$899.99",
-    #                             "zurich": "$999.99",
-    #                             "budapest": "$1,099.00",
-    #                             "lisbon": "$1,199.99"}
-    
+                                   
     def _set_ticket_prices(self):
         self.ticket_prices = load_ticket_prices()
         print()
