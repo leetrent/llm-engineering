@@ -54,15 +54,50 @@ class TicketPrices:
         return self.ticket_prices.get(p_destination.lower(), "Unknown")
         
     def _handle_tool_call(self, message):
+        log_snippet = "[ticket_prices.py][_handle_tool_call] =>"
+        
+        print()
+        print(f"{log_snippet} (message):")
+        print(message)
+        print()
+        
         tool_call = message.tool_calls[0]
         arguments = json.loads(tool_call.function.arguments)
         city = arguments.get('destination_city')
         price = self.get_ticket_price(city)
+        
+        print()
+        print(f"{log_snippet} (tool_call):")
+        print(tool_call)
+        print()
+        
+        print()
+        print(f"{log_snippet} (arguments):")
+        print(arguments)
+        print()
+        
+        print()
+        print(f"{log_snippet} (city):")
+        print(city)
+        print()
+        
+        print()
+        print(f"{log_snippet} (price):")
+        print(price)
+        print()
+        
+        
         response = {
             "role": "tool",
             "content": json.dumps({"destination_city": city,"price": price}),
             "tool_call_id": tool_call.id
         }
+        
+        print()
+        print(f"{log_snippet} (response):")
+        print(response)
+        print()
+        
         return response, city
 
     def _generate_image_prompt(self, destination):
@@ -75,6 +110,11 @@ class TicketPrices:
         response = openai.chat.completions.create(model=self.model, messages=all_messages, tools=self.tools)
         image = None
         
+        print()
+        print("[ticket_prices.py][generate_response] => (response #1):")
+        print(response)
+        print()
+        
         if response.choices[0].finish_reason=="tool_calls":
             message = response.choices[0].message
             response, city = self._handle_tool_call(message)
@@ -83,8 +123,23 @@ class TicketPrices:
             image = generate_image(self._generate_image_prompt(city))
             response = openai.chat.completions.create(model=self.model, messages=all_messages)
             
+        print()
+        print("[ticket_prices.py][generate_response] => (response #2):")
+        print(response)
+        print()
+            
         reply = response.choices[0].message.content
         p_history += [{"role":"assistant", "content":reply}]
+        
+        print()
+        print("[ticket_prices.py][generate_response] => (reply):")
+        print(reply)
+        print()
+        
+        print()
+        print("[ticket_prices.py][generate_response] => (p_history):")
+        print(p_history)
+        print()
         
         generate_speech(reply)
         

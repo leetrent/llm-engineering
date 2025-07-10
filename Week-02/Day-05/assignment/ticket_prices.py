@@ -3,6 +3,7 @@ from openai import OpenAI
 from api_key import retrieve_api_key_value
 from image import generate_image
 from speech import generate_speech
+from airline_tickets_csv import load_ticket_prices
 
 class TicketPrices:
     def __init__(self):
@@ -17,22 +18,24 @@ class TicketPrices:
                                 "Give short, courteous answers, no more than 1 sentence. " \
                                 "Always be accurate. If you don't know the answer, say so."
                                 
+    # def _set_ticket_prices(self):
+    #     self.ticket_prices = {  "london": "$199.99", 
+    #                             "paris": "$299.99", 
+    #                             "new york": "$399.99", 
+    #                             "amsterdam": "$499.99",
+    #                             "munich": "$599.99",
+    #                             "milan": "$699.99",
+    #                             "tokyo": "$799.99", 
+    #                             "copenhagen": "$899.99",
+    #                             "zurich": "$999.99",
+    #                             "budapest": "$1,099.00",
+    #                             "lisbon": "$1,199.99"}
+    
     def _set_ticket_prices(self):
-        self.ticket_prices = {  "london": "$199.99", 
-                                "paris": "$299.99", 
-                                "new york": "$399.99", 
-                                "amsterdam": "$499.99",
-                                "munich": "$599.99",
-                                "milan": "$699.99",
-                                "tokyo": "$799.99", 
-                                "copenhagen": "$899.99",
-                                "zurich": "$999.99",
-                                "budapest": "$1,099.00",
-                                "lisbon": "$1,199.99"}
+        self.ticket_prices = load_ticket_prices()
         print()
         print(self.ticket_prices)
         print()
-        
     def _set_ticket_price_function(self):
         self.ticket_price_function = {
             "name": "get_ticket_price",
