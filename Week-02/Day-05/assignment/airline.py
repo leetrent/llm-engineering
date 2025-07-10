@@ -4,14 +4,19 @@ from api_key import retrieve_api_key_value
 from image import generate_image
 from speech import generate_speech
 from airline_tickets_csv import load_ticket_prices
+from airline_tickets_csv import mark_as_booked
 
-class TicketPrices:
+class Airline:
     def __init__(self):
         self.model = "gpt-4o-mini"
         self._set_system_message()
         self._set_ticket_prices()
         self._set_ticket_price_function()
-        self.tools = [{"type": "function", "function": self.ticket_price_function}]
+        self._set_book_ticket_function()
+        self.tools = [
+            {"type": "function", "function": self.ticket_price_function},
+            {"type": "function", "function": self.book_ticket_function}
+        ]
         
     def _set_system_message(self):
         self.system_message =   "You are a helpful assistant for an Airline called FlightAI. " \
@@ -40,24 +45,70 @@ class TicketPrices:
                 "additionalProperties": False
             }
         }
+        
+    def _set_book_ticket_function(self):
+        self.book_ticket_function = {
+            "name": "book_ticket",
+            "description": "Book the flight to the destination city. Call this whenever you are asked or directed to book a flight to a destination city. For example, when a customer states the following: 'Please bbok this flight'",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "destination_city": {
+                        "type": "string",
+                        "description": "The destination that the customer wants to travel to and book a flight.",
+                    },
+                },
+                "required": ["destination_city"],
+                "additionalProperties": False
+            }
+        }
        
     def get_ticket_price(self, p_destination):
         for city, info in self.ticket_prices.items():
             if city.lower() == p_destination.lower():
                 return f"${info['Price']}"
         return "Unknown"
+    
+    def _book_ticket(self, p_destination):
+        mark_as_booked(p_destination)
+        return True
         
     def _handle_tool_call(self, message):
+        log_snippet = "[airline.py][_handle_tool_call] =>"
+               
         tool_call = message.tool_calls[0]
         arguments = json.loads(tool_call.function.arguments)
         city = arguments.get('destination_city')
+        
+        print()
+        print(f"{log_snippet} (tool_call.function.name):")
+        print(tool_call.function.name)
+        print()
+        
+        if tool_call.function.name == 'get_ticket_price':
+            return self._handle_tool_call_get_ticket_price(city, tool_call.id)
+        elif tool_call.function.name == 'book_ticket':
+            return self._handle_tool_call_book_ticket(city, tool_call.id)
+
+
+    def _handle_tool_call_get_ticket_price(self, city, tool_call_id):
         price = self.get_ticket_price(city)
         response = {
             "role": "tool",
             "content": json.dumps({"destination_city": city,"price": price}),
-            "tool_call_id": tool_call.id
+            "tool_call_id": tool_call_id
         }
         return response, city
+    
+    def _handle_tool_call_book_ticket(self, city, tool_call_id):
+        success = self._book_ticket(city)
+        response = {
+            "role": "tool",
+            "content": json.dumps({"destination_city": city,"sucess": success}),
+            "tool_call_id": tool_call_id
+        }
+        return response, city
+        
 
     def _generate_image_prompt(self, destination):
         return f"An image, in an vibrant pop-art style, representing a vacation in {destination}, showing tourist spots and everything unique about {destination}."
@@ -69,6 +120,13 @@ class TicketPrices:
         response = openai.chat.completions.create(model=self.model, messages=all_messages, tools=self.tools)
         image = None
         
+        log_snippet = "[airline.py][generate_response] =>"
+        
+        print()
+        print(f"{log_snippet} (response):")
+        print(response)
+        print()
+               
         if response.choices[0].finish_reason=="tool_calls":
             message = response.choices[0].message
             response, city = self._handle_tool_call(message)

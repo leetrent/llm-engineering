@@ -1,8 +1,8 @@
 import gradio as gr
-from ticket_prices import TicketPrices
+from airline import Airline
 
 def chat(history):
-    return TicketPrices().generate_response(history)
+    return Airline().generate_response(history)
 
 def main():
     with gr.Blocks() as ui:
