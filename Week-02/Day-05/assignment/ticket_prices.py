@@ -36,6 +36,7 @@ class TicketPrices:
         print()
         print(self.ticket_prices)
         print()
+        
     def _set_ticket_price_function(self):
         self.ticket_price_function = {
             "name": "get_ticket_price",
@@ -53,8 +54,14 @@ class TicketPrices:
             }
         }
     
+    # def get_ticket_price(self, p_destination):
+    #     return self.ticket_prices.get(p_destination.lower(), "Unknown")
+    
     def get_ticket_price(self, p_destination):
-        return self.ticket_prices.get(p_destination.lower(), "Unknown")
+        for city, info in self.ticket_prices.items():
+            if city.lower() == p_destination.lower():
+                return f"${info['Price']}"
+        return "Unknown"
         
     def _handle_tool_call(self, message):
         tool_call = message.tool_calls[0]
