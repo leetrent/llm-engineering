@@ -9,7 +9,7 @@ def load_ticket_prices(filename=CSV_FILE):
         reader = csv.DictReader(csvfile)
         for row in reader:
             prices[row["Destination"]] = {
-                "Price": int(row["Price"]),
+                "Price": float(row["Price"]),
                 "Booked": row["Booked"]
             }
     return prices

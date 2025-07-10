@@ -53,10 +53,7 @@ class TicketPrices:
                 "additionalProperties": False
             }
         }
-    
-    # def get_ticket_price(self, p_destination):
-    #     return self.ticket_prices.get(p_destination.lower(), "Unknown")
-    
+       
     def get_ticket_price(self, p_destination):
         for city, info in self.ticket_prices.items():
             if city.lower() == p_destination.lower():
