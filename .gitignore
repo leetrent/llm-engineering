@@ -13,6 +13,7 @@ Thumbs.db
 *.log
 *.txt
 *.md
+*.csv
 output/
 
 # VSCode settings (optional)
@@ -20,3 +21,6 @@ output/
 
 # Gradio
 .gradio/
+
+# Media
+*.mp3
