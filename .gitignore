@@ -1,26 +1,45 @@
-# Ignore __pycache__ and compiled Python files
+# Python cache and compiled files
 __pycache__/
 *.py[cod]
+*.egg-info/
 
-# Ignore .env files with sensitive data like API keys
+# Virtual environments
+hf-tts-env/
+venv/
+env/
+
+# Environment variable files
 .env
 
-# Ignore OS-specific files
+# OS-specific junk files
 .DS_Store
 Thumbs.db
 
-# Ignore log and output files
+# Log and output artifacts
 *.log
 *.txt
 *.md
 *.csv
 output/
 
-# VSCode settings (optional)
+# IDE/project files
 .vscode/
-
-# Gradio
 .gradio/
 
-# Media
+# Media files
 *.mp3
+*.wav
+
+# Hugging Face cache (optional, if it's local)
+.cache/
+~/.cache/huggingface/
+
+# Dataset files and speaker vectors
+*.zip
+*.npy
+cmu-arctic-xvectors/
+spkrec-xvect/
+
+# Avoid committing large models/checkpoints if manually downloaded
+*.bin
+*.safetensors
