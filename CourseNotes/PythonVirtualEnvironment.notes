@@ -1,0 +1,2 @@
+$ py -3.11 -m venv hf-tts-env
+$ source hf-tts-env/Scripts/activate
