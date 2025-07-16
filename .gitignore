@@ -43,3 +43,8 @@ spkrec-xvect/
 # Avoid committing large models/checkpoints if manually downloaded
 *.bin
 *.safetensors
+
+# Images
+*.png
+*.jpg
+*.gif
