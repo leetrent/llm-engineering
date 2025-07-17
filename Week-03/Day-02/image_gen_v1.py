@@ -27,9 +27,12 @@ def generate_image(prompt):
     image = pipe(
         prompt=prompt,
         guidance_scale=7.5,
-        num_inference_steps=50
+        num_inference_steps=50,      
+        height=640,
+        width=640
     ).images[0]
-
+    
+    torch.cuda.empty_cache()   
     return image
 
 def main():
