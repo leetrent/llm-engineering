@@ -7,15 +7,17 @@ def main():
         sys.exit(1)
 
     prompt = sys.argv[1]
-    print(f"\n🧠 Prompt: {prompt}\n")
-   
+    print(f"\n🧠 ORIGINAL TEXT:\n{'-' * 80}\n{prompt}\n")
+
     summarizer = pipeline(
         "summarization",
         model="facebook/bart-large-cnn",
         device="cuda"
     )
-    
+
     summary = summarizer(prompt, max_length=50, min_length=25, do_sample=False)
+
+    print(f"📝 SUMMARY:\n{'-' * 80}")
     print(summary[0]['summary_text'])
 
 if __name__ == "__main__":
