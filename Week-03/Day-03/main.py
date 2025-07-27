@@ -11,6 +11,8 @@ def main():
     
     if model_type == 'LLAMA':
         model = "meta-llama/Meta-Llama-3.1-8B"
+    elif model_type == "PHI3":
+        model = "microsoft/Phi-3-mini-4k-instruct"
     else:
         print("❌ Invalid model type. Supported: LLAMA")
         sys.exit(1)
