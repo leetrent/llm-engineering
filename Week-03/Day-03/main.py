@@ -11,10 +11,14 @@ def main():
     
     if model_type == 'LLAMA':
         model = "meta-llama/Meta-Llama-3.1-8B"
-    elif model_type == "PHI3":
+    elif model_type == "PHI":
         model = "microsoft/Phi-3-mini-4k-instruct"
+    elif model_type == "QWEN":
+         model = "Qwen/Qwen2-7B-Instruct"
+    elif model_type == "STAR":
+        model = "bigcode/starcoder2-3b"
     else:
-        print("❌ Invalid model type. Supported: LLAMA")
+        print("❌ Invalid model type. Supported: LLAMA, PHI, QWEN, STAR")
         sys.exit(1)
     
     tokenizer = Tokenizer(model, text)
