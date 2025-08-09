@@ -1,4 +1,9 @@
 messages = [
-    {"role": "system", "content": "You are a helpful assistant"},
-    {"role": "user", "content": "Tell a light-hearted joke for a room of Data Scientists"}
+    {"role": "system", "content": "You are a helpful assistant"}
   ]
+
+def append_user_message(user_message):
+    messages.append({"role": "user", "content": user_message})
+         
+def get_messages():
+  return messages
