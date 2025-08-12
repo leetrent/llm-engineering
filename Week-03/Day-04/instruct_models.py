@@ -1,10 +1,8 @@
-# Define the dictionary with keys in uppercase
 models = {
-    "LLAMA": "meta-llama/Meta-Llama-3.1-8B-Instruct",
-    "PHI3": "microsoft/Phi-3-mini-4k-instruct",
-    "GEMMA2": "google/gemma-2-2b-it",
-    "QWEN2": "Qwen/Qwen2-7B-Instruct",  # exercise for you
-    "MIXTRAL": "mistralai/Mixtral-8x7B-Instruct-v0.1"  # If this doesn't fit in your GPU memory, try others from the hub
+    "PHI3":  "microsoft/Phi-3-mini-4k-instruct",     # ~3.8B params, great quality/speed
+    "QWEN2": "Qwen/Qwen2.5-1.5B-Instruct",           # very light, very fast
+    "GEMMA2":"google/gemma-2-2b-it",                 # 2B instruct, solid outputs
+    "TINY":  "TinyLlama/TinyLlama-1.1B-Chat-v1.0"    # ultra fast fallback
 }
 
 def get_model(name):

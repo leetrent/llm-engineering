@@ -1,4 +1,6 @@
 from transformers import AutoModelForCausalLM
-from quant_config import quant_config
 
-model = AutoModelForCausalLM.from_pretrained(LLAMA, device_map="auto", quantization_config=quant_config)
+def get_model(model_name, quant_config):
+    model = AutoModelForCausalLM.from_pretrained(model_name, device_map="auto", quantization_config=quant_config)
+    print(model)
+    return model
