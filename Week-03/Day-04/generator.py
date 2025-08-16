@@ -10,6 +10,17 @@ def _to_device(batch, device):
         return {k: (v.to(device) if hasattr(v, "to") else v) for k, v in batch.items()}
     return batch.to(device) if hasattr(batch, "to") else batch
 
+def print_memory_footprint(model):
+    memory = model.get_memory_footprint() / 1e6
+    print()
+    print(f"Memory footprint: {memory:,.1f} MB")
+    print()
+    
+def print_model(model):
+    print()
+    print(model)
+    print()
+    
 def generate(model_name, messages, max_new_tokens: int = 256):
     tok = get_tokenizer(model_name)
     model = AutoModelForCausalLM.from_pretrained(
@@ -19,7 +30,9 @@ def generate(model_name, messages, max_new_tokens: int = 256):
         torch_dtype=torch.bfloat16,
         low_cpu_mem_usage=True,
     )
-
+    print_memory_footprint(model)
+    print(model)
+    
     inputs = get_inputs(tok, messages)
     dev = next(model.parameters()).device
     inputs = _to_device(inputs, dev)
