@@ -1,0 +1,13 @@
+# Use PyTorch CUDA 12.1 wheels (compatible with your CUDA 12.3 driver)
+--extra-index-url https://download.pytorch.org/whl/cu121
+
+# PyTorch stack (no vision/audio extras)
+torch==2.4.1+cu121
+
+# Core HF libraries
+transformers==4.48.3
+accelerate==1.3.0
+safetensors>=0.4.5
+
+# Optional: enable if your quant_config returns a BitsAndBytesConfig (4/8-bit)
+# bitsandbytes==0.46.0

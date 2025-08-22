@@ -17,7 +17,7 @@ Thumbs.db
 
 # Log and output artifacts
 *.log
-*.txt
+#*.txt
 *.md
 *.csv
 output/
@@ -48,3 +48,5 @@ spkrec-xvect/
 *.png
 *.jpg
 *.gif
+
+input-output/

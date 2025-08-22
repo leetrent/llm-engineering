@@ -1,5 +1,5 @@
 import torch
-from transformers import AutoTokenizer, BitsAndBytesConfig
+from transformers import AutoTokenizer, BitsAndBytesConfig, TextStreamer
 
 class Secretary:
     def __init__(self):
@@ -26,3 +26,6 @@ class Secretary:
     def create_minutes(self, user_prompt):
         self.messages.append(user_prompt)
         tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+        tokenizer.pad_token = tokenizer.eos_token
+        input = tokenizer.apply_chat_templete(self.messages, return_tensors="pt")
+        streamer = TextStreamer(tokenizer)
