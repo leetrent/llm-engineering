@@ -1,5 +1,6 @@
+import threading
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, TextStreamer
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, TextStreamer, TextIteratorStreamer
 
 class Secretary:
     def __init__(self):
@@ -30,9 +31,59 @@ class Secretary:
         
     def create_minutes(self, user_prompt):
         self.messages.append(user_prompt)
+        
         tokenizer = AutoTokenizer.from_pretrained(self.model_name)
         tokenizer.pad_token = tokenizer.eos_token
-        inputs = tokenizer.apply_chat_template(self.messages, return_tensors="pt").to("cuda")
+        
+        inputs = tokenizer.apply_chat_template(
+            self.messages, 
+            return_tensors="pt").to("cuda")
+        
         streamer = TextStreamer(tokenizer)
-        model = AutoModelForCausalLM.from_pretrained(self.model_name, device_map="auto", quantization_config=self.quant_config)
+        
+        model = AutoModelForCausalLM.from_pretrained(
+            self.model_name, 
+            device_map="auto", 
+            quantization_config=self.quant_config)
+        
         outputs = model.generate(inputs, max_new_tokens=self.max_new_tokens, streamer=streamer)
+        
+        
+    def stream_minutes(self, user_prompt):
+        self.messages.append(user_prompt)
+        
+        tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+        tokenizer.pad_token = tokenizer.eos_token
+        
+        inputs = tokenizer.apply_chat_template(
+            self.messages,
+            return_tensors="pt"
+        ).to("cuda")
+        
+        streamer = TextIteratorStreamer(
+            tokenizer, 
+            skip_special_tokens=True
+        )
+        
+        model = AutoModelForCausalLM.from_pretrained(
+            self.model_name,
+            device_map="auto",
+            quantization_config=self.quant_config
+        )
+        
+        def _do_generate():
+            model.generate(
+                inputs, 
+                max_new_tokens=self.max_new_tokens,
+                streamer=streamer
+            )
+
+        t = threading.Thread(target=_do_generate)
+        t.start()
+        
+        accumulated = ""
+        for token in streamer:
+            accumulated += token
+            yield accumulated
+        
+        
