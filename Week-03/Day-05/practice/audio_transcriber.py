@@ -13,7 +13,7 @@ class AudioTranscriber:
         load_dotenv()
         self.api_key = os.getenv("OPENAI_API_KEY")
         if not self.api_key:
-            raise RuntimeError("❌ No API key found in .env for ChatGPT.")
+            raise RuntimeError("❌ No API key found in .env for Whisper-1.")
         
     def transcribe(self, audio_file_name):
         audio_file = open(audio_file_name, "rb")
