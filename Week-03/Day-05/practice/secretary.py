@@ -13,6 +13,8 @@ class Secretary:
         self.max_new_tokens = 2000
         self._set_quant_config()
         self._init_messages()
+        self._tokenizer = None
+        self._model = None
         
     def _set_quant_config(self):
         self.quant_config = BitsAndBytesConfig(
@@ -33,12 +35,24 @@ class Secretary:
     def _init_messages(self):
         self._set_system_message()
         self.messages = [self.system_message]
-        
-    def create_minutes(self, user_prompt):
-        self.messages.append(user_prompt)
+                    
+    def _ensure_loaded(self):
+        if self._tokenizer is None:
+            self._tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+            self._tokenizer.pad_token = self._tokenizer.eos_token
+        if self._model is None:
+            self._model = AutoModelForCausalLM.from_pretrained(
+                self.model_name, device_map="auto", quantization_config=self.quant_config
+            )
 
-        tokenizer = AutoTokenizer.from_pretrained(self.model_name)
-        tokenizer.pad_token = tokenizer.eos_token
+            
+    def create_minutes(self, user_prompt):
+        self._ensure_loaded()
+        tokenizer = self._tokenizer
+        model = self._model
+        
+        self._init_messages()
+        self.messages.append(user_prompt)
 
         input_ids = tokenizer.apply_chat_template(
             self.messages,
@@ -48,13 +62,6 @@ class Secretary:
         attention_mask = (input_ids != tokenizer.pad_token_id).long()  # NEW
         input_ids = input_ids.to("cuda")
         attention_mask = attention_mask.to("cuda")
-
-        # ⬇︎ KEEP THIS (your original model load)
-        model = AutoModelForCausalLM.from_pretrained(
-            self.model_name,
-            device_map="auto",
-            quantization_config=self.quant_config
-        )
 
         streamer = TextStreamer(
             tokenizer,
@@ -70,10 +77,12 @@ class Secretary:
         )
 
     def stream_minutes(self, user_prompt):
+        self._ensure_loaded()
+        tokenizer = self._tokenizer
+        model = self._model
+        
+        self._init_messages()
         self.messages.append(user_prompt)
-
-        tokenizer = AutoTokenizer.from_pretrained(self.model_name)
-        tokenizer.pad_token = tokenizer.eos_token
 
         input_ids = tokenizer.apply_chat_template(
             self.messages,
@@ -83,13 +92,6 @@ class Secretary:
         attention_mask = (input_ids != tokenizer.pad_token_id).long()  # NEW
         input_ids = input_ids.to("cuda")
         attention_mask = attention_mask.to("cuda")
-
-        # ⬇︎ KEEP THIS (your original model load)
-        model = AutoModelForCausalLM.from_pretrained(
-            self.model_name,
-            device_map="auto",
-            quantization_config=self.quant_config
-        )
 
         streamer = TextIteratorStreamer(
             tokenizer,
